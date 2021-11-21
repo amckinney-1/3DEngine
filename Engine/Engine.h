@@ -29,6 +29,9 @@
 // graphics
 #include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
+#include "Graphics/Program.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Material.h"
 
 // resource
 #include "Resource/ResourceSystem.h"

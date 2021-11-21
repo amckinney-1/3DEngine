@@ -93,7 +93,6 @@ namespace nEngine
 		}
 
 		return true;
-
 	}
 
 	bool json::Get(const rapidjson::Value& value, const std::string& name, glm::vec3& data)

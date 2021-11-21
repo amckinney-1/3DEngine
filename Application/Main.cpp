@@ -1,16 +1,23 @@
+#include "Engine.h"
 #include <glad\glad.h>
 #include <sdl.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-
 #include <iostream>
 
 // vertices
 const float vertices[] =
 {
-	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+	-0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f
+};
+
+const GLuint indices[] =
+{
+	0, 2, 1,
+	0, 3, 2
 };
 
 // vertex shader
@@ -47,32 +54,21 @@ const char* fragmentSource = R"(
 
 int main(int argc, char** argv)
 {
-	int result = SDL_Init(SDL_INIT_VIDEO);
-	if (result != 0)
-	{
-		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
-	}
+	nEngine::Engine engine;
+	engine.Startup();
+	engine.Get<nEngine::Renderer>()->Create("OpenGL", 800, 600);
 
-	SDL_Window* window = SDL_CreateWindow("OpenGL", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
-	if (window == nullptr)
-	{
-		SDL_Log("Failed to create window: %s", SDL_GetError());
-	}
+	nEngine::SeedRandom(static_cast<unsigned int>(time(nullptr)));
+	nEngine::SetFilePath("../resources");
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+	std::shared_ptr<nEngine::Program> program = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Program>("basic_program");
+	std::shared_ptr<nEngine::Shader> vshader = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Shader>("shaders/basic.vert", (void*)GL_VERTEX_SHADER);
+	std::shared_ptr<nEngine::Shader> fshader = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Shader>("shaders/basic.frag", (void*)GL_FRAGMENT_SHADER);
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-	SDL_GL_SetSwapInterval(1);
-
-	SDL_GLContext context = SDL_GL_CreateContext(window);
-	if (!gladLoadGL())
-	{
-		SDL_Log("Failed to create OpenGL context");
-		exit(-1);
-	}
+	program->AddShader(vshader);
+	program->AddShader(fshader);
+	program->Link();
+	program->Use();
 
 	// set vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -126,24 +122,37 @@ int main(int argc, char** argv)
 	// create vertex buffer
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	GLuint ebo; // element buffer object
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	// position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
 	glEnableVertexAttribArray(0);
 
 	// color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLubyte*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLubyte*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+
+	// uv
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLubyte*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
+	// texture
+	nEngine::Texture texture;
+	texture.CreateTexture("textures/llama.jpg");
+	//texture.Bind();
 
 	// uniform
 	GLuint location = glGetUniformLocation(shaderProgram, "scale");
 	float time = 0;
 
 	GLuint tintLocation = glGetUniformLocation(shaderProgram, "tint");
-	glm::vec3 tint{ 1.0, 0.5, 0.5 };
+	glm::vec3 tint{ 1.0, 0.1, 0.75 };
 
 	bool quit = false;
 	while (!quit)
@@ -164,16 +173,23 @@ int main(int argc, char** argv)
 		}
 
 		SDL_PumpEvents();
-		time += 0.0001f;
+		engine.Update();
+
+		time += engine.time.deltaTime;
+
+		program->SetUniform("scale", time);
+		program->SetUniform("tint", tint);
+
 		glUniform1f(location, std::sin(time * 2));
-		glUniform3fv(tintLocation, 1, &tint[0]);
+
+		engine.Get<nEngine::Renderer>()->BeginFrame();
 
 		glClearColor(0.85f, 0.15f, 0.85f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		SDL_GL_SwapWindow(window);
+		engine.Get<nEngine::Renderer>()->EndFrame();
 	}
 
 	return 0;

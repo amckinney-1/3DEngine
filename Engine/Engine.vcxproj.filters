@@ -85,6 +85,15 @@
     <ClCompile Include="Component\AudioComponent.cpp">
       <Filter>Source\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Shader.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Program.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Material.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\EventSystem.h">
@@ -168,8 +177,17 @@
     <ClInclude Include="Component\AudioComponent.h">
       <Filter>Source\Component</Filter>
     </ClInclude>
-    <ClInclude Include="MathTypes.h">
+    <ClInclude Include="Math\MathTypes.h">
       <Filter>Source\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Shader.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Program.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Material.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
