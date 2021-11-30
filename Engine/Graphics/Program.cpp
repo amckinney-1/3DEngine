@@ -39,7 +39,7 @@ namespace nEngine
 		if (status == GL_FALSE)
 		{
 			GLint length{ 0 };
-			glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
 
 			if (length > 0)
 			{
@@ -53,8 +53,7 @@ namespace nEngine
 			glDeleteProgram(program);
 			program = 0;
 		}
-		else
-			linked = true;
+		else linked = true;
 	}
 
 	void Program::Use()
@@ -130,16 +129,13 @@ namespace nEngine
 		{
 			// add uniform to map
 			GLint uniform = glGetUniformLocation(program, name.c_str());
-			if (uniform != -1)
-			{
-				uniforms[name] = uniform;
-			}
-			else
+			if (uniform == -1)
 			{
 				SDL_Log("Could not find uniform: %s", name.c_str());
-				return -1;
 			}
+			uniforms[name] = uniform;
 		}
+
 		return uniforms[name];
 	}
 }
