@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 	program->Use();
 
 	// vertex buffer
-	std::shared_ptr<nEngine::VertexIndexBuffer> vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexIndexBuffer>("cube_mesh");
+	std::shared_ptr<nEngine::VertexBuffer> vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexBuffer>("cube_mesh");
 	vertexBuffer->CreateVertexBuffer(sizeof(vertices), 4, (void*)vertices);
 	vertexBuffer->CreateIndexBuffer(GL_UNSIGNED_INT, 36, (void*)indices);
 	vertexBuffer->SetAttribute(0, 3, 8 * sizeof(GLfloat), 0);
@@ -77,9 +77,9 @@ int main(int argc, char** argv)
 	texture->Bind();
 
 	/*auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/rocks.bmp");
-	texture->Bind();
+	texture->Bind();*/
 
-	auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/wood.png");
+	/*auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/wood.png");
 	texture->Bind();*/
 
 	// create camera
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 
 		auto component = nEngine::ObjectFactory::Instance().Create<nEngine::MeshComponent>("MeshComponent");
 		component->program = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Program>("basic_shader");
-		component->vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexIndexBuffer>("cube_mesh");
+		component->vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexBuffer>("cube_mesh");
 
 		actor->AddComponent(std::move(component));
 		scene->AddActor(std::move(actor));
@@ -150,8 +150,6 @@ int main(int argc, char** argv)
 		scene->Update(engine.time.deltaTime);
 
 		// update actor
-		
-
 		auto actor = scene->FindActor("cube");
 		if (actor != nullptr)
 		{
