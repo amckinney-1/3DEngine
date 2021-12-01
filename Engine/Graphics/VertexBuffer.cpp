@@ -4,9 +4,9 @@ namespace nEngine
 {
 	VertexBuffer::~VertexBuffer()
 	{
-		if (vao) glDeleteVertexArrays(1, &vao);
-		if (vbo) glDeleteBuffers(1, &vbo);
-		if (ibo) glDeleteBuffers(1, &ibo);
+		if (vao != 0) glDeleteVertexArrays(1, &vao);
+		if (vbo != 0) glDeleteBuffers(1, &vbo);
+		if (ibo != 0) glDeleteBuffers(1, &ibo);
 	}
 
 	bool VertexBuffer::Load(const std::string& name, void* null)
@@ -35,7 +35,7 @@ namespace nEngine
 	void VertexBuffer::CreateIndexBuffer(GLenum indexType, GLsizei count, void* data)
 	{
 		this->indexType = indexType;
-		this->indexCount = indexCount;
+		this->indexCount = count;
 
 		glGenBuffers(1, &ibo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

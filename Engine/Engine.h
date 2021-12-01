@@ -46,6 +46,7 @@
 #include "Component/AudioComponent.h"
 #include "Component/CameraComponent.h"
 #include "Component/MeshComponent.h"
+#include "Component/ModelComponent.h"
 
 #include "Component/CameraController.h"
 

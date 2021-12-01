@@ -73,14 +73,17 @@ int main(int argc, char** argv)
 	vertexBuffer->SetAttribute(2, 2, 8 * sizeof(GLfloat), 6 * sizeof(GLfloat));
 
 	// texture
-	auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/llama.jpg");
+	/*auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/llama.jpg");
 	texture->Bind();
 
-	/*auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/rocks.bmp");
+	auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/rocks.bmp");
 	texture->Bind();*/
 
 	/*auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/wood.png");
 	texture->Bind();*/
+
+	auto texture = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>("textures/spot.png");
+	texture->Bind();
 
 	// create camera
 	{
@@ -108,11 +111,16 @@ int main(int argc, char** argv)
 	{
 		auto actor = nEngine::ObjectFactory::Instance().Create<nEngine::Actor>("Actor");
 		actor->name = "cube";
-		actor->transform.position = glm::vec3{ 0, 0, 0 };
+		actor->transform.position = glm::vec3{ 0 };
+		actor->transform.scale = glm::vec3{ 1 };
 
-		auto component = nEngine::ObjectFactory::Instance().Create<nEngine::MeshComponent>("MeshComponent");
+		/*auto component = nEngine::ObjectFactory::Instance().Create<nEngine::MeshComponent>("MeshComponent");
 		component->program = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Program>("basic_shader");
-		component->vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexBuffer>("cube_mesh");
+		component->vertexBuffer = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::VertexBuffer>("cube_mesh");*/
+
+		auto component = nEngine::ObjectFactory::Instance().Create<nEngine::ModelComponent>("ModelComponent");
+		component->program = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Program>("basic_shader");
+		component->model = engine.Get<nEngine::ResourceSystem>()->Get<nEngine::Model>("models/spot.obj");
 
 		actor->AddComponent(std::move(component));
 		scene->AddActor(std::move(actor));
