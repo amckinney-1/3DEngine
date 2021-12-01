@@ -2,6 +2,12 @@
 
 namespace nEngine
 {
+	VertexBuffer::VertexBuffer()
+	{
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+	}
+
 	VertexBuffer::~VertexBuffer()
 	{
 		if (vao != 0) glDeleteVertexArrays(1, &vao);
@@ -11,9 +17,6 @@ namespace nEngine
 
 	bool VertexBuffer::Load(const std::string& name, void* null)
 	{
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-
 		return true;
 	}
 

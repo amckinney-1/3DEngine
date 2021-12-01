@@ -8,6 +8,7 @@ namespace nEngine
 	class VertexBuffer : public Resource
 	{
 	public:
+		VertexBuffer();
 		virtual ~VertexBuffer();
 
 		bool Load(const std::string& name, void* null = nullptr) override;
