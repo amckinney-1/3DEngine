@@ -6,10 +6,8 @@ namespace nEngine
 	Shader::~Shader()
 	{
 		if (shader != 0)
-		{
 			// delete shader
 			glDeleteShader(shader);
-		}
 	}
 
 	bool Shader::Load(const std::string& name, void* data)

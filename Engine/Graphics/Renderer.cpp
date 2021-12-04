@@ -9,9 +9,7 @@ namespace nEngine
 	void Renderer::Startup()
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
-		{
 			std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-		}
 
 		IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 		TTF_Init();

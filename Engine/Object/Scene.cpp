@@ -19,13 +19,9 @@ namespace nEngine
 		while (iter != actors.end())
 		{
 			if ((*iter)->destroy)
-			{
 				iter = actors.erase(iter);
-			}
 			else
-			{
 				iter++;
-			}
 
 		}
 	}
@@ -56,9 +52,8 @@ namespace nEngine
 	Actor* Scene::FindActor(const std::string& name)
 	{
 		for (auto& actor : actors)
-		{
-			if (actor->name == name) return actor.get();
-		}
+			if (actor->name == name) 
+				return actor.get();
 
 		return nullptr;
 	}

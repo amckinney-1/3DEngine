@@ -18,37 +18,28 @@ namespace nEngine
 
 	void AudioChannel::SetPitch(float pitch)
 	{
-		if (IsPlaying())
-		{
-			channel->setPitch(pitch);
-		}
+		if (IsPlaying()) channel->setPitch(pitch);
 	}
 
 	float AudioChannel::GetPitch()
 	{
 		float pitch = 0;
-		if (IsPlaying())
-		{
-			channel->getPitch(&pitch);
-		}
+		if (IsPlaying()) channel->getPitch(&pitch);
+		
 		return pitch;
 	}
 
 	void AudioChannel::SetVolume(float volume)
 	{
-		if (IsPlaying())
-		{
-			channel->setVolume(volume);
-		}
+		if (IsPlaying()) channel->setVolume(volume);
+		
 	}
 
 	float AudioChannel::GetVolume()
 	{
 		float volume = 0;
-		if (IsPlaying())
-		{
-			channel->getPitch(&volume);
-		}
+		if (IsPlaying()) channel->getPitch(&volume);
+		
 		return volume;
 	}
 

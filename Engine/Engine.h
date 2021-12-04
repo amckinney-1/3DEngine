@@ -1,14 +1,12 @@
 #pragma once
 
 #define REGISTER_CLASS(class) nEngine::ObjectFactory::Instance().Register<class>(#class)
-
+#define CREATE_ENGINE_OBJECT(class) nEngine::ObjectFactory::Instance().Create<nEngine::class>(#class);
 
 // core
 #include "Core/Utilities.h"
 #include "Core/FileSystem.h"
 #include "Core/Timer.h"
-#include "Core/Json.h"
-#include "Core/Serializable.h"
 
 // framework
 #include "Framework/EventSystem.h"
@@ -18,7 +16,6 @@
 // math
 #include "Math/Random.h"
 #include "Math/MathUtils.h"
-#include "Math/Transform.h"
 
 // audio
 #include "Audio/AudioSystem.h"
@@ -26,13 +23,7 @@
 // input
 #include "Input/InputSystem.h"
 
-// graphics
-#include "Graphics/Renderer.h"
-#include "Graphics/Texture.h"
-#include "Graphics/Program.h"
-#include "Graphics/Shader.h"
-#include "Graphics/Material.h"
-#include "Graphics/VertexBuffer.h"
+// graphics --included elsewhere--
 
 // resource
 #include "Resource/ResourceSystem.h"
@@ -47,12 +38,9 @@
 #include "Component/CameraComponent.h"
 #include "Component/MeshComponent.h"
 #include "Component/ModelComponent.h"
+#include "Component/LightComponent.h"
 
 #include "Component/CameraController.h"
-
-#include <vector>
-#include <memory>
-#include <algorithm>
 
 namespace nEngine
 {
@@ -81,9 +69,7 @@ namespace nEngine
 	inline T* Engine::Get()
 	{
 		for (auto& system : systems)
-		{
 			if (dynamic_cast<T*>(system.get())) return dynamic_cast<T*>(system.get());
-		}
 
 		return nullptr;
 	}

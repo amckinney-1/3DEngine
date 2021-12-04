@@ -13,10 +13,8 @@ namespace nEngine
 
 	void AudioSystem::Shutdown()
 	{
-		for (auto& sound : sounds)
-		{
-			sound.second->release();
-		}
+		for (auto& sound : sounds) sound.second->release();
+		
 		sounds.clear();
 
 		fmodSystem->close();

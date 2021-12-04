@@ -58,13 +58,9 @@ namespace nEngine
 		bool prevKeyDown = IsPreviousButtonDown(id);
 
 		if (keyDown)
-		{
 			state = (prevKeyDown) ? eKeyState::Held : eKeyState::Pressed;
-		}
 		else
-		{
 			state = (prevKeyDown) ? eKeyState::Released : eKeyState::Idle;
-		}
 
 		return state;
 	}
@@ -77,13 +73,9 @@ namespace nEngine
 		bool prevKeyDown = IsPreviousKeyDown(id);
 
 		if (keyDown)
-		{
 			state = (prevKeyDown) ? eKeyState::Held : eKeyState::Pressed;
-		}
 		else
-		{
 			state = (prevKeyDown) ? eKeyState::Released : eKeyState::Idle;
-		}
 
 		return state;
 	}

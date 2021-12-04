@@ -34,9 +34,7 @@ namespace nEngine
 
 		// process the current node children
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
-		{
 			ProcessNode(node->mChildren[i], scene);
-		}
 	}
 
 	void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
