@@ -9,65 +9,17 @@ int main(int argc, char** argv)
 	engine->Startup();
 	engine->Get<nEngine::Renderer>()->Create("OpenGL", 800, 600);
 
+	nEngine::SeedRandom(static_cast<unsigned int>(time(nullptr)));
+	nEngine::SetFilePath("../resources");
+
 	// create scene
 	std::unique_ptr<nEngine::Scene> scene = std::make_unique<nEngine::Scene>();
 	scene->engine = engine.get();
 
-	nEngine::SeedRandom(static_cast<unsigned int>(time(nullptr)));
-	nEngine::SetFilePath("../resources");
-
-	// create camera
-	{
-		auto actor = CREATE_ENGINE_OBJECT(Actor);
-		actor->name = "camera";
-		actor->transform.position = glm::vec3{ 0, 0, 5 };
-
-		{
-			auto component = CREATE_ENGINE_OBJECT(CameraComponent);
-			component->SetPerspective(45.0f, 800.0f / 600.0f, 0.01f, 100.0f);
-			actor->AddComponent(std::move(component));
-		}
-		{
-			auto component = CREATE_ENGINE_OBJECT(FreeCameraController);
-			component->speed = 8;
-			component->sensitivity = 0.1f;
-			actor->AddComponent(std::move(component));
-		}
-
-		scene->AddActor(std::move(actor));
-	}
-	// create model
-	{
-		auto actor = CREATE_ENGINE_OBJECT(Actor);
-		actor->name = "model";
-		actor->transform.position = glm::vec3{ 0 };
-		actor->transform.scale = glm::vec3{ 1 };
-
-		auto component = CREATE_ENGINE_OBJECT(ModelComponent);
-		component->model = engine->Get<nEngine::ResourceSystem>()->Get<nEngine::Model>("models/cube.obj");
-		component->material = engine->Get<nEngine::ResourceSystem>()->Get<nEngine::Material>("materials/wood.mtl", engine.get());
-
-		actor->AddComponent(std::move(component));
-		scene->AddActor(std::move(actor));
-	}
-
-	// create light
-	{
-		auto actor = CREATE_ENGINE_OBJECT(Actor);
-		actor->name = "light";
-		actor->transform.position = glm::vec3{ 4, 1, 4 };
-
-		auto component = CREATE_ENGINE_OBJECT(LightComponent);
-		component->ambient = glm::vec3{ 0.2f };
-		component->diffuse = glm::vec3{ 1 };
-		component->specular = glm::vec3{ 1 };
-
-		actor->AddComponent(std::move(component));
-		scene->AddActor(std::move(actor));
-	}
-
-	glm::vec3 translate{ 0.0f };
-	float angle{ 0 };
+	// load scene
+	rapidjson::Document document;
+	bool success = nEngine::json::Load("scenes/main.scn", document);
+	scene->Read(document);
 
 	bool quit = false;
 	while (!quit)
@@ -91,11 +43,19 @@ int main(int argc, char** argv)
 		engine->Update();
 		scene->Update(engine->time.deltaTime);
 
-		// update actor
-		auto actor = scene->FindActor("model");
+		//// update actor
+		//auto actor = scene->FindActor("model");
+		//if (actor != nullptr)
+		//{
+		//	actor->transform.rotation.y += engine->time.deltaTime;
+		//}
+
+		 // update actor
+		auto actor = scene->FindActor("light");
 		if (actor != nullptr)
 		{
-			actor->transform.rotation.y += engine->time.deltaTime;
+			glm::mat3 rotation = glm::rotate(engine->time.deltaTime, glm::vec3{ 0, 0, 1 });
+			actor->transform.position = actor->transform.position * rotation;
 		}
 
 		engine->Get<nEngine::Renderer>()->BeginFrame();

@@ -1,7 +1,10 @@
 #version 430 core
-in vec3 fs_position;
-in vec3 fs_normal;
-in vec2 fs_texcoord;
+in VS_OUT
+{
+    vec3 position;
+    vec3 normal;
+    vec2 texcoord;
+} fs_in;
 
 out vec4 outColor;
 
@@ -39,8 +42,8 @@ void main()
     vec3 ambient = material.ambient * light.ambient;
 
     //diffuse
-    vec3 vnormal = mat3(model_view) * normal;
-    vec4 vposition = model_view * vec4(position, 1);
+    vec3 vnormal = mat3(model_view) * fs_in.normal;
+    vec4 vposition = model_view * vec4(fs_in.position, 1);
     vec3 light_dir = normalize(vec3(light.position - vposition));
 
     float intensity = max(dot(light_dir, vnormal), 0);
@@ -59,5 +62,5 @@ void main()
     
     //fs_color = color;
     //outColor = texture(textureSampler, fs_textcoord) * vec4(fs_color, 1);
-    outColor = vec4(ambient + diffuse, 1) * texture(textureSampler, fs_texcoord) + vec4(specular, 1);
+    outColor = vec4(ambient + diffuse, 1) * texture(textureSampler, fs_in.texcoord) + vec4(specular, 1);
 }

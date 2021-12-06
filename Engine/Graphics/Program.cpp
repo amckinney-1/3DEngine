@@ -79,7 +79,7 @@ namespace nEngine
 				glGetProgramInfoLog(program, length, &length, &infoLog[0]);
 
 				SDL_Log("Error: Failed to link program.");
-				SDL_Log("Program Inof: %s", infoLog.c_str());
+				SDL_Log("Program Info: %s", infoLog.c_str());
 			}
 
 			glDeleteProgram(program);

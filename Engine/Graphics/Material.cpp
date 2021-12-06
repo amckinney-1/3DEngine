@@ -32,9 +32,12 @@ namespace nEngine
 		std::vector<std::string> texture_names;
 		JSON_READ(document, texture_names);
 
+		GLuint units[] = { GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4, GL_TEXTURE5 };
+		size_t i = 0;
+
 		for (auto& name : texture_names)
 		{
-			auto texture = engine->Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>(name, engine);
+			auto texture = engine->Get<nEngine::ResourceSystem>()->Get<nEngine::Texture>(name, (void*)units[i++]);
 			if (texture.get()) // check for valid texture
 				AddTexture(texture);
 		}
@@ -47,11 +50,12 @@ namespace nEngine
 	{
 		// set the shader (bind)
 		shader->Use();
+
 		// update shader material properties
 		shader->SetUniform("material.ambient", ambient);
-		shader->SetUniform("material.ambient", diffuse);
-		shader->SetUniform("material.ambient", specular);
-		shader->SetUniform("material.ambient", shininess);
+		shader->SetUniform("material.diffuse", diffuse);
+		shader->SetUniform("material.specular", specular);
+		shader->SetUniform("material.shininess", shininess);
 
 		// set the textures (bind)
 		Bind();

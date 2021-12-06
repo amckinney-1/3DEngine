@@ -19,6 +19,9 @@
     <Filter Include="Resource\Shaders">
       <UniqueIdentifier>{0814f7ae-7675-4996-8c1a-a6e431ff91f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\Scenes">
+      <UniqueIdentifier>{f0a1ccac-9640-4966-98f9-d5a5deb450e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -67,6 +70,21 @@
     </None>
     <None Include="..\Build\Resources\Shaders\phong.frag">
       <Filter>Resource\Shaders</Filter>
+    </None>
+    <None Include="..\Build\Resources\Scenes\main.scn">
+      <Filter>Resource\Scenes</Filter>
+    </None>
+    <None Include="..\Build\Resources\Shaders\phong_normal.shdr">
+      <Filter>Resource\Shaders</Filter>
+    </None>
+    <None Include="..\Build\Resources\Shaders\phong_normal.vert">
+      <Filter>Resource\Shaders</Filter>
+    </None>
+    <None Include="..\Build\Resources\Shaders\phong_normal.frag">
+      <Filter>Resource\Shaders</Filter>
+    </None>
+    <None Include="..\Build\Resources\Materials\brick.mtl">
+      <Filter>Resource\Materials</Filter>
     </None>
   </ItemGroup>
 </Project>

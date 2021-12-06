@@ -1,14 +1,15 @@
-#version 430 core 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
-layout(location = 2) in vec2 texcoord;
+#version 430 core
+in VS_OUT
+{
+    vec3 position;
+    vec3 normal;
+    vec2 texcoord;
+} fs_in;
 
-out vec3 fs_color;
-out vec2 fs_texcoord;
+out vec4 outColor;
 
 struct Material
 {
-    vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     float shininess;
@@ -29,16 +30,19 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+layout (binding = 0) uniform sampler2D colorSampler;
+layout (binding = 1) uniform sampler2D normalSampler;
+
 void main()
 {
     mat4 model_view = view * model;
 
     // ambient
-    vec3 ambient = material.ambient * light.ambient;
+    vec3 ambient = light.ambient;
 
     //diffuse
-    vec3 vnormal = mat3(model_view) * normal;
-    vec4 vposition = model_view * vec4(position, 1);
+    vec3 vnormal = mat3(model_view) * fs_in.normal;
+    vec4 vposition = model_view * vec4(fs_in.position, 1);
     vec3 light_dir = normalize(vec3(light.position - vposition));
 
     float intensity = max(dot(light_dir, vnormal), 0);
@@ -54,8 +58,6 @@ void main()
         intensity = pow(intensity, material.shininess);
         specular = material.specular * light.specular * intensity;
     }
-
-    fs_color = ambient + diffuse + specular;
-    fs_texcoord = texcoord;
-    gl_Position = projection * view * model * vec4(position, 1);
+    
+    outColor = vec4(ambient + diffuse, 1) * texture(colorSampler, fs_in.texcoord) + vec4(specular, 1);
 }
